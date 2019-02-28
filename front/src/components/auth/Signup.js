@@ -9,7 +9,7 @@ import '../../style/form.css';
 class Signup extends Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '', dateBirth:'', weight:'', height:'',imageUrl: "" };
+    this.state = { username: '', password: '', dateBirth:'', weight:'', height:'',imageUrl: "", messageError:""  };
     this.service = new AuthService();
   }
 
@@ -38,7 +38,7 @@ class Signup extends Component {
         //y mostrando la parte de contenidos. Mira la función getUser de App para más info (date cuenta de que establece el state de App)
         this.props.getUser(response.user)
       })
-      .catch(error => {
+      .catch(error => {console.log("FDFD",error)
         this.setState({
           username: username,
           password: password,
@@ -46,8 +46,8 @@ class Signup extends Component {
           weight: weight,
           height: height,
           imageUrl: imageUrl,
-
           error: true
+          //messageError: error
         });
       })
   }
@@ -107,15 +107,11 @@ class Signup extends Component {
             <input type="text" name="height" value={this.state.height} onChange={ e => this.handleChange(e)}/>
           </fieldset>
 
-          <input 
-                    type="file" 
-                    onChange={(e) => this.handleFileUpload(e)} /> 
           
-
           <button type="submit">Registrarse</button>
         </form>
 
-        <h1>{this.state.error ? 'Errorttt' : ''}</h1>
+        <h1>{this.state.error ? this.state.messageError : ''}</h1>
         <h1>{console.log("RRR",this.state)}</h1>
       </div>
     )

@@ -38,11 +38,11 @@ const login = (req, user) => {
 // SIGNUP
 router.post('/signup', (req, res, next) => {
 
-  const {username, password, age, weigth, heigth } = req.body;
+  const {username, password, dateBirth, weigth, heigth,imageUrl } = req.body;
 
   console.log('username', username)
   console.log('password', password)
-  console.log('age', req.body)
+  console.log('Parameters', req.body)
   // Check for non empty user or password
   if (!username || !password){
     next (new Error('You must provide valid credentials')); //REVISAR NO ESTA DEVOLVIENDO LOS ERRORES antes tenia un next
@@ -59,9 +59,10 @@ router.post('/signup', (req, res, next) => {
     return new User({
       username,
       password: hashPass,
-      age,
+      dateBirth,
       weigth,
       heigth,
+      imageUrl
       
     }).save();
   })

@@ -1,14 +1,16 @@
 // auth/auth-service.js
 import axios from 'axios';
 
+// console.log("wwww",env)process.env.REACT_APP_baseURL,
+// debugger
+
 class AuthService {
   constructor() {
     this.service = axios.create({
-      baseURL: 'http://localhost:3010/api/auth',
+      baseURL: process.env.REACT_APP_baseURL,
       withCredentials: true
     });
-  }
-
+  };
   handleUpload = theFile => {
     return this.service.post('/upload', theFile)
       .then(res => res.data)
@@ -16,8 +18,8 @@ class AuthService {
   }
 
 
-  signup = (username, password,dateBirth,weigth,heigth) => {
-    return this.service.post('/signup', {username, password, dateBirth,weigth,heigth})
+  signup = (username, password,dateBirth,weigth,heigth,imageUrl) => {
+    return this.service.post('/signup', {username, password, dateBirth,weigth,heigth,imageUrl})
     .then(response => response.data)
   }
 
