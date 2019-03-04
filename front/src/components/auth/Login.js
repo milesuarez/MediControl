@@ -1,6 +1,6 @@
 // auth/Signup.js
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import AuthService from './AuthService'
 
 class Login extends Component {
@@ -24,6 +24,7 @@ class Login extends Component {
         });
 
         this.props.getUser(response)
+        console.log("MMM",response)
       })
       .catch(error => {
         this.setState({

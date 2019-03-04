@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
 
-// import ProjectList from './components/projects/ProjectList';
-import Navbar from './components/navbar/Navbar';
-// import ProjectDetails from './components/projects/ProjectDetails';
+import Medicines from './components/contents/Medicines';
+import MyDaily from './components/contents/MyDaily';
 import Signup from './components/auth/Signup';
 import Login from './components/auth/Login';
 import AuthService from './components/auth/AuthService';
 import Contents from './components/contents/Contents'
+import Navbar from './components/navbar/Navbar';
 
 //App es la aplicación base, que se sirve del servicio AuthService para conectar con la bbdd
 class App extends Component {
 
-  //en el tiempo de construcción de la aplicación, creamos una instancia del authservice
+  //instancia del authservice
   constructor(props){
     super(props)
     //arrancamos el estado con un valor de loggedInUser con nada (luego lo vamos a reemplazar con el valor real)
@@ -31,8 +31,10 @@ class App extends Component {
     this.service.logout()
     .then(() => {
       this.setState({ loggedInUser: null });
+      
     })
   }
+
 
   //este método vuelca la información del usuario y lo guarda en el state de app que siempre puedes revisitar
   fetchUser(){
@@ -65,7 +67,6 @@ class App extends Component {
           <header className="App-header">
             <Navbar userInSession={this.state.loggedInUser} logout={this.logout} />
             {/* aqui simplemente se muestra un lorem ipsum genérico para que veáis contenidos que solo se muestran a usuarios logeados */}
-            <Contents></Contents>
           </header>
         </div>
       );
@@ -78,6 +79,9 @@ class App extends Component {
             <Switch>
               <Route exact path='/signup' render={() => <Signup getUser={this.getUser}/>}/>
               <Route exact path='/login' render={() => <Login getUser={this.getUser}/>}/>
+              <Route exact path='/medicines' render={() => <Medicines getUser={this.getUser}/>}/>
+              <Route exact path='/mydaily' render={() => <MyDaily getUser={this.getUser}/>}/>
+            
             </Switch>
           </header>
         </div>

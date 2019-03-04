@@ -9,7 +9,7 @@ import '../../style/form.css';
 class Signup extends Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '', dateBirth:'', weight:'', height:'',imageUrl: "", messageError:""  };
+    this.state = { username: '', password: '', email:'', dateBirth:'', weight:'', height:'', imageUrl: '', messageError:''  };
     this.service = new AuthService();
   }
 
@@ -17,36 +17,41 @@ class Signup extends Component {
     event.preventDefault();
     const username = this.state.username;
     const password = this.state.password;
+    const email = this.state.email;
     const dateBirth = this.state.dateBirth;
     const weight = this.state.weight;
     const height = this.state.height;
     const imageUrl = this.state.imageUrl
+    console.log("SSSS",this.state)
 
     //aquí llamamos al endpoint /signup de nuestra API Rest usando nuestro AuthService
-    this.service.signup(username, password,dateBirth,weight,height.imageUrl)
+    this.service.signup(username, password, email, dateBirth, weight, height, imageUrl)
       .then(response => {
         this.setState({
-          username: "",
-          password: "",
-          dateBirth: "",
-          weight : "",
-          height : "",
-          imageUrl: ""
+          username  : "",
+          password  : "",
+          email     : "",
+          dateBirth : "",
+          weight    : "",
+          height    : "",
+          imageUrl  : ""
         });
         //aquí elevamos el nuevo usuario una vez creado a App usando getUser via props
         //por tanto, informamos a App de que el nuevo usuario ha sido creado, provocando un re-render
         //y mostrando la parte de contenidos. Mira la función getUser de App para más info (date cuenta de que establece el state de App)
+        console.log("eeee",response.user)
         this.props.getUser(response.user)
       })
-      .catch(error => {console.log("FDFD",error)
+      .catch(error => {console.log("FDFD",this.state)
         this.setState({
-          username: username,
-          password: password,
-          dateBirth: dateBirth,
-          weight: weight,
-          height: height,
-          imageUrl: imageUrl,
-          error: true
+          username  : username,
+          password  : password,
+          email     : email,
+          dateBirth : dateBirth,
+          weight    : weight,
+          height    : height,
+          imageUrl  : imageUrl,
+          error   : true
           //messageError: error
         });
       })
@@ -84,34 +89,42 @@ class Signup extends Component {
           
           <fieldset>
             <label>Usuario:</label>
-            <input type="text" name="username" value={this.state.username} onChange={e => this.handleChange(e)} />
+            <input type="text" name="username" required value={this.state.username} onChange={e => this.handleChange(e)} />
           </fieldset>
 
           <fieldset>
             <label>Clave de acceso:</label>
-            <input type="password" name="password" value={this.state.password} onChange={e => this.handleChange(e)} />
+            <input type="password" name="password" required value={this.state.password} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>e-mail:</label>
+            <input type="email" name="email" required value={this.state.email} onChange={e => this.handleChange(e)} />
           </fieldset>
 
           <fieldset>
             <label>Fecha de Nacimiento:</label>
-            <input type="date" name="dateBirth" value={this.state.dateBirth} onChange={e => this.handleChange(e)} />
+            <input type="date" name="dateBirth" required value={this.state.dateBirth} onChange={e => this.handleChange(e)} />
           </fieldset>
 
           <fieldset>
             <label>Peso:</label>
-            <input type="text" name="weight" value={this.state.weight} onChange={e => this.handleChange(e)} />
+            <input type="number" name="weight" required value={this.state.weight} onChange={e => this.handleChange(e)} />
           </fieldset>
 
           <fieldset>
             <label>Altura:</label>
-            <input type="text" name="height" value={this.state.height} onChange={ e => this.handleChange(e)}/>
+            <input type="number" name="height" required value={this.state.height} onChange={ e => this.handleChange(e)}/>
           </fieldset>
 
+          <input 
+                    type="file" 
+                    onChange={(e) => this.handleFileUpload(e)} /> 
           
           <button type="submit">Registrarse</button>
         </form>
 
-        <h1>{this.state.error ? this.state.messageError : ''}</h1>
+        <h1>{this.state.error ? 'Error' : ''}</h1>
         <h1>{console.log("RRR",this.state)}</h1>
       </div>
     )

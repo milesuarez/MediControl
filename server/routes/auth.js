@@ -2,8 +2,30 @@ const express = require('express');
 const router  = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Medicine = require("../models/Medicines");
+const DailyMedicines = require("../models/DailyMedicines");
 const passport = require('passport');
 const uploader = require('../config/cloudinary-setup')
+
+
+// CONTROL DE ACCESO A LA APLICACÓN
+
+
+const login = (req, user) => {
+  return new Promise((resolve,reject) => {
+    req.login(user, err => {
+      //console.log('req.login ')
+      console.log("wwwwww",user)
+
+      
+      if(err) {
+        reject(new Error('Something went wrong'))
+      }else{
+        resolve(user);
+      }
+    })
+  })
+}
 
 router.post('/upload', uploader.single("imageUrl"), (req, res, next) => {
 
@@ -17,35 +39,19 @@ router.post('/upload', uploader.single("imageUrl"), (req, res, next) => {
 })
 
 
-
-const login = (req, user) => {
-  return new Promise((resolve,reject) => {
-    req.login(user, err => {
-      console.log('req.login ')
-      console.log(user)
-
-      
-      if(err) {
-        reject(new Error('Something went wrong'))
-      }else{
-        resolve(user);
-      }
-    })
-  })
-}
-
-
 // SIGNUP
 router.post('/signup', (req, res, next) => {
 
-  const {username, password, dateBirth, weigth, heigth,imageUrl } = req.body;
+  const {username, password, email, dateBirth, weigth, heigth, imageUrl } = req.body;
 
   console.log('username', username)
   console.log('password', password)
-  console.log('Parameters', req.body)
+  console.log('Parameters', req.body.imageUrl)
   // Check for non empty user or password
   if (!username || !password){
-    next (new Error('You must provide valid credentials')); //REVISAR NO ESTA DEVOLVIENDO LOS ERRORES antes tenia un next
+    
+    //res.status(500).json({ message: 'Usuario y/o clave de acceso ivalida' });
+    //next (new Error('You must provide valid credentials')); //REVISAR NO ESTA DEVOLVIENDO LOS ERRORES antes tenia un next
   }
   else {
   // Check if user exists in DB
@@ -56,18 +62,29 @@ router.post('/signup', (req, res, next) => {
     const salt     = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
 
-    return new User({
+    return imageUrl ? new User({
       username,
       password: hashPass,
+      email,
       dateBirth,
       weigth,
       heigth,
       imageUrl
       
+    }).save() : new User({
+      username,
+      password: hashPass,
+      email,
+      dateBirth,
+      weigth,
+      heigth,
+      
     }).save();
+    
   })
   .then( savedUser => login(req, savedUser)) // Login the user using passport
   .then( user => res.json({status: 'signup & login successfully', user})) // Answer JSON
+ 
   .catch(e => next(e));
 }
 });
@@ -90,14 +107,94 @@ router.get('/currentuser', (req,res,next) => {
   if(req.user){
     res.status(200).json(req.user);
   }else{
-    next(new Error('Not logged in'))
+    res.status(500).json({ message: err.message });
+    //next(new Error('Not logged in'))
   }
 })
 
 
 router.get('/logout', (req,res) => {
   req.logout();
-  res.status(200).json({message:'logged out'})
+  res.redirect("/");
+  //res.status(200).json({message:'logged out'})
+});
+
+// GESTIÓN DE LOS MEDICAMENTOS QUE CONSSUME EL PACIENTE
+//, ensureLoggedIn("/") debo buscar la manera de asegurar que solo entre cuando esta logiado el usuario
+router.get('/medicineAll/:user_id',(req, res, next) => {
+  Medicine.find({creatorId: req.session.passport.user })
+    .then(medicine =>{ res.render('MedicinesAll', { medicine }) })
+    .catch(error => { console.log(error) }) 
+});
+
+router.get('/medicine/:medicine_id', (req, res, next) => {
+  Medicine.findById(req.params.medicine_id)
+  .then(medicine =>{ 
+      res.render('Medicine', {medicine}) })
+  .catch(error => { console.log(error) }) 
+});
+
+router.get('/addMedicine/:user_id',(req, res, next) => {
+  res.render('addMedicine');
+});
+
+
+router.post('/addMedicine',(req, res, next) => {
+
+  const {nameMedicine, startDate, finishDate, doses} = req.body;
+
+  const newMedicine = new Medicine({
+      creatorId     :   req.session.passport.user,
+      nameMedicine,
+      startDate,
+      finishDate,
+      doses       
+      
+  });
+  newMedicine
+    .save()
+    .then(() => res.redirect("/medicine/:req.session.passport.user"))
+    .catch(err => console.log("An error ocurred sabing a post"));
+});
+
+router.get('/updateMedicine/:medicine_id',(req, res, next) => {
+  Medicine.findById(req.params.id)
+    .then(medicine =>{  res.render('updateMedicine', { medicine }) })
+    .catch(error => { console.log(error) }) 
+  
+});
+
+router.post('/updateMedicine',(req, res, next) => {
+  const {startDate,finishDate,doses} = req.body;
+  const DateToday=new Date();
+  if (startDate< DateToday || finishDate > startDate){return res.status(500).json(JSON.stringify({message:'Username already exists'}));
+  } 
+  const medicineID = req.body.medicine_id;
+  const medicineUpdate = { 
+    startDate,
+    finishDate,
+    doses
+  }
+
+  Medicine.findOneAndUpdate({_id: medicineID}, medicineUpdate, {new: true})
+    .then(() => res.redirect('/addMedicine/:medicineID'))
+    .catch(error => { console.log(error) }) 
+  
+});
+
+// GESTIÓN DEL PLAN DE TOMA DE DOSIS DIARIA
+
+router.get('/mydaily', (req, res, next) => {
+  passport.authenticate('local', (err, theUser, failureDetails) => {
+    
+    // Check for errors
+    if (err) next(new Error('Something went wrong')); 
+    if (!theUser) next(failureDetails)
+
+    // Return user and logged in
+    login(req, theUser).then(user => res.status(200).json(req.user));
+
+  })(req, res, next);
 });
 
 

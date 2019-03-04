@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 class Contents extends Component {
   render() {
     return (<div>
-        <p>Aqui debe ir la pantalla pricipal de los medicamentos.</p>
+        <p>Aqui debe ir la pantalla pricipal de los medicamentos gggggggg.</p>
         </div>);
     
   }
