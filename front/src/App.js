@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
 
+import MedicinesAll from './components/contents/Medicines';
 import Medicines from './components/contents/Medicines';
-import MyDaily from './components/contents/MyDaily';
 import Signup from './components/auth/Signup';
 import Login from './components/auth/Login';
 import AuthService from './components/auth/AuthService';
@@ -79,8 +79,8 @@ class App extends Component {
             <Switch>
               <Route exact path='/signup' render={() => <Signup getUser={this.getUser}/>}/>
               <Route exact path='/login' render={() => <Login getUser={this.getUser}/>}/>
+              <Route exact path='/medicineAll/:user_id' component={MedicinesAll}/>
               <Route exact path='/medicines' render={() => <Medicines getUser={this.getUser}/>}/>
-              <Route exact path='/mydaily' render={() => <MyDaily getUser={this.getUser}/>}/>
             
             </Switch>
           </header>

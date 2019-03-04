@@ -1,4 +1,3 @@
-// navbar/Navbar.js
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -35,7 +34,7 @@ class Navbar extends Component {
           <nav className="nav-style">
             <ul>
               <li>
-                <Link to={`/medicines/${this.state.loggedInUser._id}`}>
+                <Link to={`/medicineAll/${this.state.loggedInUser._id}`}>
                   {<p>Planificación</p>}
 
                 </Link>

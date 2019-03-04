@@ -24,7 +24,7 @@ class AuthService {
     .then(response => response.data)
   }
 
-  login = (username, password) => {
+  login = (username, password) => {console.log("en el login")
     return this.service.post('/login', {username, password})
     .then(response => response.data)
   }
@@ -39,7 +39,7 @@ class AuthService {
     .then(response => response.data)
   }
 
-  medicines = (creatorId) => {
+  medicines = (creatorId) => { console.log("en el server")
     return this.service.get('/medicines',{creatorId})
     .then(response => response.data)
   }

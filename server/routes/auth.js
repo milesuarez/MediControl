@@ -122,6 +122,7 @@ router.get('/logout', (req,res) => {
 // GESTIÓN DE LOS MEDICAMENTOS QUE CONSSUME EL PACIENTE
 //, ensureLoggedIn("/") debo buscar la manera de asegurar que solo entre cuando esta logiado el usuario
 router.get('/medicineAll/:user_id',(req, res, next) => {
+  console.log("uuuuuuuuuuuu",this.state.loggedInUser.imageUrl)
   Medicine.find({creatorId: req.session.passport.user })
     .then(medicine =>{ res.render('MedicinesAll', { medicine }) })
     .catch(error => { console.log(error) }) 

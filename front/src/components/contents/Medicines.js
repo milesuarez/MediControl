@@ -1,10 +1,12 @@
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import AuthService from '../auth/AuthService';
+console.log("wwwentre ")
 
 class Medicines extends Component {
+    
     constructor(props) {
+        console.log("wwwentre ")
         super(props);
         this.state = { creatorId:'', nameMedicine: '', startDate: '', finishDate: '', doses: ''};
         this.service = new AuthService();
@@ -58,18 +60,18 @@ class Medicines extends Component {
             <form id="form" onSubmit={this.handleFormSubmit}>
               
               <fieldset>
-                <label>Usuario:</label>
-                <input type="text" name="username" required value={this.state.username} onChange={e => this.handleChange(e)} />
+                <label>Medicina:</label>
+                <input type="text" name="nameMedicine" required value={this.state.nameMedicine} onChange={e => this.handleChange(e)} />
               </fieldset>
     
               <fieldset>
-                <label>Clave de acceso:</label>
-                <input type="password" name="password" required value={this.state.password} onChange={e => this.handleChange(e)} />
+                <label>Fecha de inicio de toma:</label>
+                <input type="date" name="startDate" required value={this.state.startDate} onChange={e => this.handleChange(e)} />
               </fieldset>
     
               <fieldset>
-                <label>e-mail:</label>
-                <input type="email" name="email" required value={this.state.email} onChange={e => this.handleChange(e)} />
+                <label>Fecha de fin de toma:</label>
+                <input type="date" name="finishDate" required value={this.state.finishDate} onChange={e => this.handleChange(e)} />
               </fieldset>
     
               <fieldset>
@@ -78,19 +80,10 @@ class Medicines extends Component {
               </fieldset>
     
               <fieldset>
-                <label>Peso:</label>
-                <input type="number" name="weight" required value={this.state.weight} onChange={e => this.handleChange(e)} />
+                <label>Dosis:</label>
+                <input type="number" name="doses" required value={this.state.weight} onChange={e => this.handleChange(e)} />
               </fieldset>
-    
-              <fieldset>
-                <label>Altura:</label>
-                <input type="number" name="height" required value={this.state.height} onChange={ e => this.handleChange(e)}/>
-              </fieldset>
-    
-              <input 
-                        type="file" 
-                        onChange={(e) => this.handleFileUpload(e)} /> 
-              
+                  
               <button type="submit">Registrarse</button>
             </form>
     
