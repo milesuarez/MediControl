@@ -9,6 +9,7 @@ import '../../style/form.css';
 class Signup extends Component {
   constructor(props) {
     super(props);
+    
     this.state = { username: '', password: '', email:'', dateBirth:'', weight:'', height:'', imageUrl: '', messageError:''  };
     this.service = new AuthService();
   }
@@ -22,7 +23,7 @@ class Signup extends Component {
     const weight = this.state.weight;
     const height = this.state.height;
     const imageUrl = this.state.imageUrl
-    console.log("SSSS",this.state)
+    
 
     //aquí llamamos al endpoint /signup de nuestra API Rest usando nuestro AuthService
     this.service.signup(username, password, email, dateBirth, weight, height, imageUrl)
@@ -39,7 +40,7 @@ class Signup extends Component {
         //aquí elevamos el nuevo usuario una vez creado a App usando getUser via props
         //por tanto, informamos a App de que el nuevo usuario ha sido creado, provocando un re-render
         //y mostrando la parte de contenidos. Mira la función getUser de App para más info (date cuenta de que establece el state de App)
-        console.log("eeee",response.user)
+        
         this.props.getUser(response.user)
       })
       .catch(error => {console.log("FDFD",this.state)
@@ -125,7 +126,7 @@ class Signup extends Component {
         </form>
 
         <h1>{this.state.error ? 'Error' : ''}</h1>
-        <h1>{console.log("RRR",this.state)}</h1>
+        
       </div>
     )
   }

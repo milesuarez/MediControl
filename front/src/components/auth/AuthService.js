@@ -39,13 +39,13 @@ class AuthService {
     .then(response => response.data)
   }
 
-  medicines = (creatorId) => { console.log("en el server")
+  medicinesAll = (creatorId) => { console.log("en el server")
     return this.service.get('/medicines',{creatorId})
     .then(response => response.data)
   }
 
-  medicinesAdd = (creatorId, nameMedicine, startDate, finishDate, doses, unidades) => {
-    return this.service.post('/medicines/add',{creatorId, nameMedicine, startDate, finishDate, doses, unidades})
+  medicinesAdd = (nameMedicine, startDate, finishDate, dosesTime, doses, unit) => {console.log("en el servidor")
+    return this.service.post('/addMedicine',{nameMedicine, startDate, finishDate, dosesTime, doses, unit})
     .then(response => response.data)
   }
 

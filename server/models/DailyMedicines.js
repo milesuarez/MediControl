@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const DailySchema = new Schema({
     creatorId   : { type: Schema.Types.ObjectId, ref: "User" },
     medicinesId : { type: Schema.Types.ObjectId, ref: "Medicines" },
-    nameMedicine: String,
-    Date        : Date,
+    date        : Date,
     doses       : Number,
     status      : Boolean
 }, {

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../auth/AuthService';
+import DailyMedicines from '../contents/DailyMedicines'
+import Medicines from '../contents/Medicines'
 
 class Navbar extends Component {
   constructor(props) {
@@ -19,18 +21,20 @@ class Navbar extends Component {
   handleLogout = (e) => {
     this.props.logout()
   }
-
-
+  
+  
   render() {
+    
     
 
     if (this.state.loggedInUser) {
       
-      console.log("WWWWggg", this.state.loggedInUser._id);
+      console.log("WWWWggg", this.props);
   
       return (
         <div>
           <img width="20%" alt="Mi foto" src={this.state.loggedInUser.imageUrl} />
+          <h4>{this.state.loggedInUser.username}</h4>
           <nav className="nav-style">
             <ul>
               <li>
@@ -43,8 +47,9 @@ class Navbar extends Component {
               <li><a onClick={this.handleLogout}>Salir</a></li>
             </ul>
 
-            <h4>Welcome, {this.state.loggedInUser.username}</h4>
-            <p>Aqui va el listado de medicinas del dia</p>
+           
+          
+            <Medicines creatorId={this.state.loggedInUser._id} getUser={this.props.getUser} />
           </nav>
         </div>
       )

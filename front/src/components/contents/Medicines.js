@@ -4,94 +4,112 @@ import AuthService from '../auth/AuthService';
 console.log("wwwentre ")
 
 class Medicines extends Component {
+
+  constructor(props) {
+
+    super(props);
+    this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: '' };
+    this.service = new AuthService();
+    console.log("wwwentre ", this.props)
+  }
+
+  handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    const nameMedicine = this.state.nameMedicine;
+    const startDate = this.state.startDate;
+    const finishDate = this.state.finishDate;
     
-    constructor(props) {
-        console.log("wwwentre ")
-        super(props);
-        this.state = { creatorId:'', nameMedicine: '', startDate: '', finishDate: '', doses: ''};
-        this.service = new AuthService();
-      }
-    
-      handleFormSubmit = (event) => {
-        event.preventDefault();
-        const creatorId     = this.state.creatorId;
-        const nameMedicine  = this.state.nameMedicine;
-        const startDate     = this.state.startDate;
-        const finishDate    = this.state.finishDate;
-        const doses         = this.state.doses;
-        
-        console.log("SSSS",this.state)
-    
-        //aquí llamamos al endpoint /signup de nuestra API Rest usando nuestro AuthService
-        this.service.signup(creatorId, nameMedicine, startDate, finishDate, doses)
-          .then(response => {
-            this.setState({
-                creatorId       : '',
-                nameMedicine    : '',
-                startDate       : '',
-                finishDate      : '',
-                doses           : '', 
-            });
-            
-          })
-          .catch(error => {console.log("FDFD",this.state)
-            this.setState({
-                creatorId       : creatorId,
-                nameMedicine    : nameMedicine,
-                startDate       : startDate,
-                finishDate      : finishDate,
-                doses           : doses,
-                error           : true
-              //messageError: error
-            });
-          })
-      }
-    
-      handleChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
-      }
-    
-      render() {
-        return (
-          <div>
-            
-            <h4>Para ingresar la toma de un nuevo medicamento complete el siguiente formulario</h4>
-            <form id="form" onSubmit={this.handleFormSubmit}>
-              
-              <fieldset>
-                <label>Medicina:</label>
-                <input type="text" name="nameMedicine" required value={this.state.nameMedicine} onChange={e => this.handleChange(e)} />
-              </fieldset>
-    
-              <fieldset>
-                <label>Fecha de inicio de toma:</label>
-                <input type="date" name="startDate" required value={this.state.startDate} onChange={e => this.handleChange(e)} />
-              </fieldset>
-    
-              <fieldset>
-                <label>Fecha de fin de toma:</label>
-                <input type="date" name="finishDate" required value={this.state.finishDate} onChange={e => this.handleChange(e)} />
-              </fieldset>
-    
-              <fieldset>
-                <label>Fecha de Nacimiento:</label>
-                <input type="date" name="dateBirth" required value={this.state.dateBirth} onChange={e => this.handleChange(e)} />
-              </fieldset>
-    
-              <fieldset>
-                <label>Dosis:</label>
-                <input type="number" name="doses" required value={this.state.weight} onChange={e => this.handleChange(e)} />
-              </fieldset>
-                  
-              <button type="submit">Registrarse</button>
-            </form>
-    
-            <h1>{this.state.error ? 'Error' : ''}</h1>
-            <h1>{console.log("RRR",this.state)}</h1>
-          </div>
-        )
-      }
+    const dosesTime = this.state.dosesTime;
+    const doses = this.state.doses;
+    const unit = this.state.unit;
+
+    console.log("SSSS", this.state)
+
+    //aquí llamamos al endpoint /signup de nuestra API Rest usando nuestro AuthService
+    this.service.medicinesAdd(nameMedicine, startDate, finishDate, dosesTime, doses, unit)
+      .then(response => {
+        this.setState({
+          
+          nameMedicine: '',
+          startDate: '',
+          finishDate: '',
+          dosesTime: '',
+          doses: '',
+          unit: '',
+        });
+        this.props.getUser(response.user)
+      })
+      .catch(error => {
+        console.log("FDFD", this.state)
+        this.setState({
+
+          nameMedicine: nameMedicine,
+          startDate: startDate,
+          finishDate: finishDate,
+          dosesTime: dosesTime,
+          doses: doses,
+          unit: unit,
+          error: true
+          //messageError: error
+        });
+      })
+  }
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
+
+  render() {
+    return (
+      <div>
+
+        <h4>Ingrese un nuevo medicamento completando el formulario</h4>
+        <form id="form" onSubmit={this.handleFormSubmit}>
+
+          <fieldset>
+            <label>Medicina:</label>
+            <input type="text" name="nameMedicine" required value={this.state.nameMedicine} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>Fecha de inicio de toma:</label>
+            <input type="date" name="startDate" required value={this.state.startDate} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>Fecha de fin de toma:</label>
+            <input type="date" name="finishDate" required value={this.state.finishDate} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>Hora de la toma:</label>
+            <input type="time" name="dosesTime" required value={this.state.dosesTime} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>Dosis:</label>
+            <input type="number" name="doses" required value={this.state.doses} onChange={e => this.handleChange(e)} />
+          </fieldset>
+
+          <fieldset>
+            <label>Unidades (mg / ml):</label>
+
+            <select name="unit" value={this.state.value} onChange={e => this.handleChange(e)}>
+              <option value="mg">mg</option>
+              <option value="ml">ml</option>
+            </select>
+          </fieldset>
+
+          <button type="submit">Registrarse</button>
+        </form>
+
+        <h1>{this.state.error ? 'Error' : ''}</h1>
+
+      </div>
+    )
+  }
 }
 
 export default Medicines;

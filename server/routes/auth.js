@@ -119,7 +119,7 @@ router.get('/logout', (req,res) => {
   //res.status(200).json({message:'logged out'})
 });
 
-// GESTIÓN DE LOS MEDICAMENTOS QUE CONSSUME EL PACIENTE
+// GESTIÓN DE LOS MEDICAMENTOS QUE CONSUME EL PACIENTE
 //, ensureLoggedIn("/") debo buscar la manera de asegurar que solo entre cuando esta logiado el usuario
 router.get('/medicineAll/:user_id',(req, res, next) => {
   console.log("uuuuuuuuuuuu",this.state.loggedInUser.imageUrl)
@@ -142,20 +142,23 @@ router.get('/addMedicine/:user_id',(req, res, next) => {
 
 router.post('/addMedicine',(req, res, next) => {
 
-  const {nameMedicine, startDate, finishDate, doses} = req.body;
-
+  const {nameMedicine, startDate, finishDate, dosesTime, doses, unit} = req.body;
+  
+  console.log(req.session.passport.user,"Agregando un medicamento",req.body)
   const newMedicine = new Medicine({
       creatorId     :   req.session.passport.user,
       nameMedicine,
       startDate,
       finishDate,
-      doses       
+      dosesTime,
+      doses,
+      unit       
       
-  });
+  }).save();
   newMedicine
     .save()
-    .then(() => res.redirect("/medicine/:req.session.passport.user"))
-    .catch(err => console.log("An error ocurred sabing a post"));
+    .then(() => res.redirect("/medicine"))
+    .catch(err => console.log("An error ocurred saving a post"));
 });
 
 router.get('/updateMedicine/:medicine_id',(req, res, next) => {
@@ -166,7 +169,7 @@ router.get('/updateMedicine/:medicine_id',(req, res, next) => {
 });
 
 router.post('/updateMedicine',(req, res, next) => {
-  const {startDate,finishDate,doses} = req.body;
+  const {startDate,finishDate,doses,unit} = req.body;
   const DateToday=new Date();
   if (startDate< DateToday || finishDate > startDate){return res.status(500).json(JSON.stringify({message:'Username already exists'}));
   } 
@@ -174,7 +177,8 @@ router.post('/updateMedicine',(req, res, next) => {
   const medicineUpdate = { 
     startDate,
     finishDate,
-    doses
+    doses,
+    unit
   }
 
   Medicine.findOneAndUpdate({_id: medicineID}, medicineUpdate, {new: true})

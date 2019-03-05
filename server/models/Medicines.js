@@ -6,8 +6,9 @@ const medicinesSchema = new Schema({
     nameMedicine: String,
     startDate   : Date,
     finishDate  : Date,
-    doses       : [{ time: String, quantity: Number }],
-    unidades    : { type: String, enum: ['mg', 'ml'], default: 'mg' },
+    dosesTime   : String,
+    doses       : Number,
+    unit        : { type: String, enum: ['mg', 'ml'], default: 'mg' },
 }, {
     timestamps: {
       createdAt : 'created_at',
