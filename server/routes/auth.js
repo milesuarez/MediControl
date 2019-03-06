@@ -7,16 +7,12 @@ const DailyMedicines = require("../models/DailyMedicines");
 const passport = require('passport');
 const uploader = require('../config/cloudinary-setup')
 
-
 // CONTROL DE ACCESO A LA APLICACÓN
 
 
 const login = (req, user) => {
   return new Promise((resolve,reject) => {
     req.login(user, err => {
-      //console.log('req.login ')
-      console.log("wwwwww",user)
-
       
       if(err) {
         reject(new Error('Something went wrong'))
@@ -97,7 +93,8 @@ router.post('/login', (req, res, next) => {
     if (!theUser) next(failureDetails)
 
     // Return user and logged in
-    login(req, theUser).then(user => res.status(200).json(req.user));
+    login(req, theUser)
+    .then(user => res.status(200).json(req.user));
 
   })(req, res, next);
 });
@@ -121,12 +118,16 @@ router.get('/logout', (req,res) => {
 
 // GESTIÓN DE LOS MEDICAMENTOS QUE CONSUME EL PACIENTE
 //, ensureLoggedIn("/") debo buscar la manera de asegurar que solo entre cuando esta logiado el usuario
-router.get('/medicineAll/:user_id',(req, res, next) => {
-  console.log("uuuuuuuuuuuu",this.state.loggedInUser.imageUrl)
-  Medicine.find({creatorId: req.session.passport.user })
-    .then(medicine =>{ res.render('MedicinesAll', { medicine }) })
+
+router.get('/medicinesAll/:user_id',(req, res, next) => {
+  console.log("Entrando al servidor",req.session.passport.user)
+  Medicine.find({creatorId: req.params.user_id})
+  .sort({ startDate: 'asc' })
+    .then(medicine =>res.json( medicine) )
     .catch(error => { console.log(error) }) 
 });
+
+
 
 router.get('/medicine/:medicine_id', (req, res, next) => {
   Medicine.findById(req.params.medicine_id)
@@ -157,9 +158,13 @@ router.post('/addMedicine',(req, res, next) => {
   }).save();
   newMedicine
     .save()
-    .then(() => res.redirect("/medicine"))
-    .catch(err => console.log("An error ocurred saving a post"));
+    .then((data) => {
+
+      return res.json({data})})
+    .catch(error => { console.log(error) });
 });
+
+
 
 router.get('/updateMedicine/:medicine_id',(req, res, next) => {
   Medicine.findById(req.params.id)
@@ -189,17 +194,11 @@ router.post('/updateMedicine',(req, res, next) => {
 
 // GESTIÓN DEL PLAN DE TOMA DE DOSIS DIARIA
 
-router.get('/mydaily', (req, res, next) => {
-  passport.authenticate('local', (err, theUser, failureDetails) => {
-    
-    // Check for errors
-    if (err) next(new Error('Something went wrong')); 
-    if (!theUser) next(failureDetails)
-
-    // Return user and logged in
-    login(req, theUser).then(user => res.status(200).json(req.user));
-
-  })(req, res, next);
+router.get('/dailyMedicines/:user_id',(req, res, next) => {
+  console.log("uuuuuuuuuuuu",this.state.loggedInUser.imageUrl)
+  Daily.find({creatorId: req.session.passport.user })
+    .then(medicine =>{ res.render('DailyMedicines', { medicine }) })
+    .catch(error => { console.log(error) }) 
 });
 
 

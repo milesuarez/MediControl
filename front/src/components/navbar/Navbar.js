@@ -1,16 +1,20 @@
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import Signup from '../auth/Signup';
+import Login from '../auth/Login';
+import { Switch, Route, Link } from 'react-router-dom';
 import AuthService from '../auth/AuthService';
 import DailyMedicines from '../contents/DailyMedicines'
-import Medicines from '../contents/Medicines'
+import Medicines from '../contents/Medicines';
+import Contents from '../contents/Contents';
+import MedicinesAll from '../contents/MedicinesAll';
+
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = { loggedInUser: null };
     this.service = new AuthService();
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -21,16 +25,12 @@ class Navbar extends Component {
   handleLogout = (e) => {
     this.props.logout()
   }
-  
-  
+
+
   render() {
-    
-    
 
     if (this.state.loggedInUser) {
-      
-      console.log("WWWWggg", this.props);
-  
+
       return (
         <div>
           <img width="20%" alt="Mi foto" src={this.state.loggedInUser.imageUrl} />
@@ -43,14 +43,23 @@ class Navbar extends Component {
 
                 </Link>
               </li>
+              <li>
+                <Link to={`/dailymedicine/${this.state.loggedInUser._id}`}>
+                  {<p>Dosis hoy</p>}
+
+                </Link>
+              </li>
 
               <li><a onClick={this.handleLogout}>Salir</a></li>
             </ul>
-
-           
           
-            <Medicines creatorId={this.state.loggedInUser._id} getUser={this.props.getUser} />
           </nav>
+          <Switch>
+            <Route exact path='/medicineAll/:user_id' render = {() => <MedicinesAll userData={this.state.loggedInUser._id}/>}  />
+            <Route exact path='/dailyMedicines/:user_id' component={DailyMedicines} />
+            <Route exact path='/medicines/:user_id' render = {() => <Medicines userData={this.state.loggedInUser._id} getUser={this.props.getUser}/>}  />
+
+          </Switch>
         </div>
       )
     } else {
@@ -61,6 +70,11 @@ class Navbar extends Component {
               <li><Link to='/signup'>Registrarse</Link></li>
               <li><Link to='/login'>Ingresar</Link></li>
             </ul>
+            <Switch>
+              <Route exact path='/signup' render={() => <Signup getUser={this.props.getUser} />} />
+              <Route exact path='/login' render={() => <Login getUser={this.props.getUser} />} />
+
+            </Switch>
           </nav>
         </div>
       )

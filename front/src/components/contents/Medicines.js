@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
 import AuthService from '../auth/AuthService';
-console.log("wwwentre ")
 
 class Medicines extends Component {
 
@@ -10,14 +9,14 @@ class Medicines extends Component {
     super(props);
     this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: '' };
     this.service = new AuthService();
-    console.log("wwwentre ", this.props)
+    console.log("wwwentrerrr ", this.props)
   }
 
   handleFormSubmit = (event) => {
     event.preventDefault();
 
     const nameMedicine = this.state.nameMedicine;
-    const startDate = this.state.startDate;
+    const startDate = new Date(this.state.startDate);
     const finishDate = this.state.finishDate;
     
     const dosesTime = this.state.dosesTime;
@@ -65,7 +64,7 @@ class Medicines extends Component {
     return (
       <div>
 
-        <h4>Ingrese un nuevo medicamento completando el formulario</h4>
+        <h4>Ingrese un nuevo medicamento</h4>
         <form id="form" onSubmit={this.handleFormSubmit}>
 
           <fieldset>
@@ -102,10 +101,10 @@ class Medicines extends Component {
             </select>
           </fieldset>
 
-          <button type="submit">Registrarse</button>
+          <button type="submit">Ingresar</button>
         </form>
 
-        <h1>{this.state.error ? 'Error' : ''}</h1>
+        <h1>{this.state.error ? 'ErrorM' : ''}</h1>
 
       </div>
     )

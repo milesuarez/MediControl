@@ -6,7 +6,7 @@ import AuthService from './AuthService'
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '' };
+    this.state = { username: '', password: '' , error:false};
     this.service = new AuthService();
   }
 
@@ -17,9 +17,10 @@ class Login extends Component {
 
     this.service.login(username, password)
       .then(response => {
+        
         this.setState({
-          username: username,
-          password: password,
+          username: response.username,
+          password: response.password,
           error: false
         });
 
@@ -27,6 +28,7 @@ class Login extends Component {
         console.log("MMM",response)
       })
       .catch(error => {
+        console.log(error)
         this.setState({
           username: username,
           password: password,

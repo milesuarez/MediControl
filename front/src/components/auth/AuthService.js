@@ -40,7 +40,7 @@ class AuthService {
   }
 
   medicinesAll = (creatorId) => { console.log("en el server")
-    return this.service.get('/medicines',{creatorId})
+    return this.service.get(`/medicinesAll/${creatorId}`)
     .then(response => response.data)
   }
 
