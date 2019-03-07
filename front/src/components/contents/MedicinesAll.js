@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 import AuthService from '../auth/AuthService';
 import agregar from './agregar.png';
 import editar from './editar.png';
-import { Switch, Route, Link } from 'react-router-dom';
-import Medicines from '../contents/Medicines';
+import { Switch, Link } from 'react-router-dom';
+import '../../style/DailyMedicines.css';
+
+
 
 class MedicinesAll extends Component {
 
@@ -15,15 +17,15 @@ class MedicinesAll extends Component {
       data: null
     }
     this.service = new AuthService();
-    console.log("En la segunda", this.props)
+    
     this.service.medicinesAll(this.props.userData)
       .then(response => {
-        console.log('Respuesta', response)
+       
         this.setState({
           ...this.state,
           data: response
         }, () => {
-          console.log('el nuevo state es', this.state.data)
+          
         })
       })
 
@@ -44,14 +46,14 @@ class MedicinesAll extends Component {
           
           <table>
             <tr>
-              <th>INICIO</th><th>FIN</th><th>MEDICINA</th><th>HORA</th><th>DOSIS</th><th>MODIFICAR</th>
+              <th>INICIO</th><th>FIN</th><th>MEDICINA</th><th>HORA</th><th>DOSIS</th><th>EDITAR</th>
             </tr>
             <tbody>
               {this.state.data.map((element, index) => {
                 return (
 
                   <tr key={index}>
-                    <td>{new Date(element.startDate).getDate()}/{new Date(element.startDate).getMonth()+1}/{new Date(element.startDate).getFullYear()}</td>
+                    <td>{(new Date(element.startDate).getDate()>9?new Date(element.startDate).getDate():('0'+new Date(element.startDate).getDate()))}/{new Date(element.startDate).getMonth()+1}/{new Date(element.startDate).getFullYear()}</td>
                     <td>{new Date(element.finishDate).getDate()}/{new Date(element.finishDate).getMonth()+1}/{new Date(element.finishDate).getFullYear()}</td>
                     
                     <td>{element.dosesTime}</td>
@@ -62,8 +64,9 @@ class MedicinesAll extends Component {
                   </tr>
 
                 )
-              })
-              }</tbody>
+                })
+              }
+            </tbody>
           </table>
         </div>
       )

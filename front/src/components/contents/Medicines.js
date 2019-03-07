@@ -7,7 +7,7 @@ class Medicines extends Component {
   constructor(props) {
 
     super(props);
-    this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: '' };
+    this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: 'mg' };
     this.service = new AuthService();
     console.log("wwwentrerrr ", this.props)
   }
@@ -96,6 +96,7 @@ class Medicines extends Component {
             <label>Unidades (mg / ml):</label>
 
             <select name="unit" value={this.state.value} onChange={e => this.handleChange(e)}>
+            <option value=""></option>
               <option value="mg">mg</option>
               <option value="ml">ml</option>
             </select>

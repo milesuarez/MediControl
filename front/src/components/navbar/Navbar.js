@@ -52,12 +52,12 @@ class Navbar extends Component {
 
               <li><a onClick={this.handleLogout}>Salir</a></li>
             </ul>
-          
+
           </nav>
           <Switch>
-            <Route exact path='/medicineAll/:user_id' render = {() => <MedicinesAll userData={this.state.loggedInUser._id}/>}  />
-            <Route exact path='/dailyMedicines/:user_id' component={DailyMedicines} />
-            <Route exact path='/medicines/:user_id' render = {() => <Medicines userData={this.state.loggedInUser._id} getUser={this.props.getUser}/>}  />
+            <Route exact path='/medicineAll/:user_id' render={() => <MedicinesAll userData={this.state.loggedInUser._id} />} />
+            <Route exact path='/dailyMedicines/:user_id' render={() => <dailyMedicines userData={this.state.loggedInUser._id} />} />
+            <Route exact path='/medicines/:user_id' render={() => <Medicines userData={this.state.loggedInUser._id} getUser={this.props.getUser} />} />
 
           </Switch>
         </div>

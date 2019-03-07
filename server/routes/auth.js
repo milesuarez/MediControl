@@ -119,9 +119,10 @@ router.get('/logout', (req,res) => {
 // GESTIÓN DE LOS MEDICAMENTOS QUE CONSUME EL PACIENTE
 //, ensureLoggedIn("/") debo buscar la manera de asegurar que solo entre cuando esta logiado el usuario
 
+
 router.get('/medicinesAll/:user_id',(req, res, next) => {
-  console.log("Entrando al servidor",req.session.passport.user)
-  Medicine.find({creatorId: req.params.user_id})
+  console.log("Entrando al servidor de Alll",req.session.passport.user)
+  Medicine.find({creatorId: req.params.user_id, startDate:{$gte: new Date()}})
   .sort({ startDate: 'asc' })
     .then(medicine =>res.json( medicine) )
     .catch(error => { console.log(error) }) 
@@ -161,7 +162,7 @@ router.post('/addMedicine',(req, res, next) => {
     .then((data) => {
 
       return res.json({data})})
-    .catch(error => { console.log(error) });
+    .catch(error => { return res.json({error}) });
 });
 
 
@@ -194,12 +195,15 @@ router.post('/updateMedicine',(req, res, next) => {
 
 // GESTIÓN DEL PLAN DE TOMA DE DOSIS DIARIA
 
-router.get('/dailyMedicines/:user_id',(req, res, next) => {
-  console.log("uuuuuuuuuuuu",this.state.loggedInUser.imageUrl)
-  Daily.find({creatorId: req.session.passport.user })
-    .then(medicine =>{ res.render('DailyMedicines', { medicine }) })
+router.get('/daily/:user_id',(req, res, next) => {
+  console.log("Entrando al servidor de Daily",req.session.passport.user)
+  Medicine.find({creatorId: req.params.user_id, startDate:{$lte: new Date()}, finishDate:{$gte: new Date()}})
+  .sort({ dosesTime: 'asc' })
+    .then(medicine =>res.json( medicine) )
     .catch(error => { console.log(error) }) 
 });
+
+
 
 
 router.use((err, req, res, next) => {

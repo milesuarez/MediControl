@@ -39,12 +39,12 @@ class AuthService {
     .then(response => response.data)
   }
 
-  medicinesAll = (creatorId) => { console.log("en el server")
+  medicinesAll = (creatorId) => { 
     return this.service.get(`/medicinesAll/${creatorId}`)
     .then(response => response.data)
   }
 
-  medicinesAdd = (nameMedicine, startDate, finishDate, dosesTime, doses, unit) => {console.log("en el servidor")
+  medicinesAdd = (nameMedicine, startDate, finishDate, dosesTime, doses, unit) => {
     return this.service.post('/addMedicine',{nameMedicine, startDate, finishDate, dosesTime, doses, unit})
     .then(response => response.data)
   }
@@ -60,8 +60,8 @@ class AuthService {
   }
 
 
-  dailyMedicines = (creatorId) => {
-    return this.service.get('/dailyMedicines',{creatorId})
+  daily = (creatorId) => {console.log("en el server5555",creatorId)
+    return this.service.get(`/daily/${creatorId}`)
     .then(response => response.data)
   }
 
