@@ -4,7 +4,7 @@ import AuthService from '../auth/AuthService';
 import agregar from './agregar.png';
 import editar from './editar.png';
 import { Switch, Link } from 'react-router-dom';
-import '../../style/DailyMedicines.css';
+import '../../style/Medicines.css';
 
 
 
@@ -17,8 +17,25 @@ class MedicinesAll extends Component {
       data: null
     }
     this.service = new AuthService();
-    
+  }
+   
+  componentDidMount(){
+
     this.service.medicinesAll(this.props.userData)
+    .then(response => {
+      
+      this.setState({
+        ...this.state,
+        data: response
+      }, () => {
+        
+      })
+    })
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    this.service.medicinesAll(nextProps.userData)
       .then(response => {
        
         this.setState({
@@ -28,7 +45,6 @@ class MedicinesAll extends Component {
           
         })
       })
-
   }
 
   render() {
@@ -46,7 +62,7 @@ class MedicinesAll extends Component {
           
           <table>
             <tr>
-              <th>INICIO</th><th>FIN</th><th>MEDICINA</th><th>HORA</th><th>DOSIS</th><th>EDITAR</th>
+              <th>INICIO</th><th>FIN</th><th>HORA</th><th>MEDICINA</th><th>DOSIS</th><th>EDITAR</th>
             </tr>
             <tbody>
               {this.state.data.map((element, index) => {
@@ -60,7 +76,7 @@ class MedicinesAll extends Component {
                     <td>{element.nameMedicine}</td>
                     <td>{element.doses}{element.unit}</td>
                     
-                    <td><img width="20px" src={editar} alt='Tomada' /></td>
+                    <td><img className="images" width="15px" src={editar} alt='Editar' /></td>
                   </tr>
 
                 )

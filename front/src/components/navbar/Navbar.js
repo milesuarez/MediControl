@@ -15,10 +15,18 @@ class Navbar extends Component {
     super(props);
     this.state = { loggedInUser: null };
     this.service = new AuthService();
+    this.getUser();
+  }
+
+  
+  getUser = () => {
+    this.service.loggedin()
+    .then(loggedInUser => this.setState({...this.state, loggedInUser}))
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ ...this.state, loggedInUser: nextProps["userInSession"] })
+    this.getUser();
+    // this.setState({ ...this.state, loggedInUser: nextProps["userInSession"] })
 
   }
 
@@ -44,7 +52,7 @@ class Navbar extends Component {
                 </Link>
               </li>
               <li>
-                <Link to={`/dailymedicine/${this.state.loggedInUser._id}`}>
+                <Link to={`/dailyMedicines/${this.state.loggedInUser._id}`}>
                   {<p>Dosis hoy</p>}
 
                 </Link>
@@ -56,7 +64,8 @@ class Navbar extends Component {
           </nav>
           <Switch>
             <Route exact path='/medicineAll/:user_id' render={() => <MedicinesAll userData={this.state.loggedInUser._id} />} />
-            <Route exact path='/dailyMedicines/:user_id' render={() => <dailyMedicines userData={this.state.loggedInUser._id} />} />
+            {/* <Route exact path='/' render={() => <MedicinesAll userData={this.state.loggedInUser._id} />} /> */}
+            <Route exact path='/dailyMedicines/:user_id' render={() => <DailyMedicines userData={this.state.loggedInUser._id} />} />
             <Route exact path='/medicines/:user_id' render={() => <Medicines userData={this.state.loggedInUser._id} getUser={this.props.getUser} />} />
 
           </Switch>

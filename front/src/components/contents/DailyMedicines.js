@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AuthService from '../auth/AuthService';
-import '../../style/DailyMedicines.css';
+import '../../style/Medicines.css';
 import check from './check.png';
 
 
@@ -12,8 +12,12 @@ class DailyMedicines extends Component {
     super(props);
     this.state = {
       data: null
+      
     }
+
+    
     this.service = new AuthService();
+    const today = new Date();
     console.log("sigo buscando",this.props.userData)
     this.service.daily(this.props.userData)
       .then(response => {
@@ -29,7 +33,10 @@ class DailyMedicines extends Component {
   }
 
 
+
   render() {
+
+    
 
     function ShowDate() {
       let meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -40,10 +47,10 @@ class DailyMedicines extends Component {
 
 
     if (this.state.data) {
-      
+      console.log("QQQ",this.state.data)
       return (
         <div>
-          <h5>Tus medicinas del: {ShowDate()}</h5>
+          <h5>Tus medicinas del {ShowDate()}</h5>
           <table>
             <tbody>
               <tr>
@@ -56,7 +63,7 @@ class DailyMedicines extends Component {
                     <td> { element.dosesTime }</td>
                     <td> { element.nameMedicine }</td>
                     <td> { element.doses } { element.unit }</td>
-                    <td><img width="30px" src={check} alt='Tomada' /></td>
+                    <td><img className="images" src={check} alt='Tomada' /></td>
                   </tr>
                 )
               })}

@@ -1,16 +1,15 @@
 
 import React, { Component } from 'react';
 import AuthService from '../auth/AuthService';
-import { Redirect } from 'react-router-dom'
-import App from '../../App';
 
-class Medicines extends Component {
+class MedicinesUpdate extends Component {
 
   constructor(props) {
 
     super(props);
-    this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: 'mg', redirected:false };
+    this.state = { nameMedicine: '', startDate: '', finishDate: '', dosesTime: '', doses: '', unit: 'mg' };
     this.service = new AuthService();
+    console.log("wwwentrerrr ", this.props)
   }
 
   handleFormSubmit = (event) => {
@@ -19,27 +18,24 @@ class Medicines extends Component {
     const nameMedicine = this.state.nameMedicine;
     const startDate = new Date(this.state.startDate);
     const finishDate = this.state.finishDate;
+    
     const dosesTime = this.state.dosesTime;
     const doses = this.state.doses;
     const unit = this.state.unit;
 
     //aquí llamamos al endpoint /signup de nuestra API Rest usando nuestro AuthService
-   
     this.service.medicinesAdd(nameMedicine, startDate, finishDate, dosesTime, doses, unit)
       .then(response => {
         this.setState({
-          redirected : true,
+          
           nameMedicine: '',
           startDate: '',
           finishDate: '',
           dosesTime: '',
           doses: '',
           unit: '',
-          
-          user: this.props.userData
         });
         this.props.getUser(response.user)
-        console.log("quien soy ",this.state.user);
       })
       .catch(error => {
         console.log("FDFD", error)
@@ -51,7 +47,8 @@ class Medicines extends Component {
           dosesTime: dosesTime,
           doses: doses,
           unit: unit,
-          
+          error: true
+          //messageError: error
         });
       })
   }
@@ -61,7 +58,7 @@ class Medicines extends Component {
     this.setState({ [name]: value });
   }
 
-  render() { if (!this.state.redirected) {
+  render() {
     return (
       <div>
 
@@ -75,7 +72,7 @@ class Medicines extends Component {
 
           <fieldset>
             <label>Fecha de inicio de toma:</label>
-            <input type="date" name="startDate" min={new Date()} required value={this.state.startDate} onChange={e => this.handleChange(e)} />
+            <input type="date" name="startDate" required value={this.state.startDate} onChange={e => this.handleChange(e)} />
           </fieldset>
 
           <fieldset>
@@ -95,7 +92,7 @@ class Medicines extends Component {
 
           <fieldset>
             <label>Unidades (mg / ml):</label>
-<br></br>
+
             <select name="unit" value={this.state.value} onChange={e => this.handleChange(e)}>
             <option value=""></option>
               <option value="mg">mg</option>
@@ -109,10 +106,8 @@ class Medicines extends Component {
         <h1>{this.state.error ? 'ErrorM' : ''}</h1>
 
       </div>
-    )}
-    // else return (<Redirect to = {`/medicinesAll/${this.props.userData}`} />)
-    else return (<Redirect to = {`/`} />)
+    )
   }
 }
 
-export default Medicines;
+export default MedicinesUpdate;

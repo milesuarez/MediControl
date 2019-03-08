@@ -121,14 +121,18 @@ router.get('/logout', (req,res) => {
 
 
 router.get('/medicinesAll/:user_id',(req, res, next) => {
-  console.log("Entrando al servidor de Alll",req.session.passport.user)
-  Medicine.find({creatorId: req.params.user_id, startDate:{$gte: new Date()}})
-  .sort({ startDate: 'asc' })
+  let today1 = (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+((new Date()).getDate())+' 00:00:00.000';
+ // let today = '2019-03-07'+' 00:00:00.000';
+  let theDate = new Date(today1).toISOString()
+ // console.log("DAAAAAA",today,new Date(today).toISOString())
+  Medicine.find({$and: [{creatorId: req.params.user_id}, 
+                        {$or:[{startDate:{$gte: theDate}}, {finishDate:{$gte: theDate}}]}]})
+  .sort({ startDate: 'asc', dosesTime: 'asc' })
     .then(medicine =>res.json( medicine) )
     .catch(error => { console.log(error) }) 
 });
 
-
+// {$or:[{startDate:{$gte: theDate}}, {finishDate:{$lte: theDate}}]}]})
 
 router.get('/medicine/:medicine_id', (req, res, next) => {
   Medicine.findById(req.params.medicine_id)
@@ -147,7 +151,7 @@ router.post('/addMedicine',(req, res, next) => {
   const {nameMedicine, startDate, finishDate, dosesTime, doses, unit} = req.body;
   
   console.log(req.session.passport.user,"Agregando un medicamento",req.body)
-  const newMedicine = new Medicine({
+  new Medicine({
       creatorId     :   req.session.passport.user,
       nameMedicine,
       startDate,
@@ -156,13 +160,10 @@ router.post('/addMedicine',(req, res, next) => {
       doses,
       unit       
       
-  }).save();
-  newMedicine
+  })
     .save()
-    .then((data) => {
-
-      return res.json({data})})
-    .catch(error => { return res.json({error}) });
+    .then((data) => { return res.json({data})})
+    .catch(error => { return res.json({error,message:"No pude guardar"}) });
 });
 
 
@@ -196,13 +197,14 @@ router.post('/updateMedicine',(req, res, next) => {
 // GESTIÓN DEL PLAN DE TOMA DE DOSIS DIARIA
 
 router.get('/daily/:user_id',(req, res, next) => {
-  console.log("Entrando al servidor de Daily",req.session.passport.user)
-  Medicine.find({creatorId: req.params.user_id, startDate:{$lte: new Date()}, finishDate:{$gte: new Date()}})
+  let today1 = (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+((new Date()).getDate())+' 00:00:00.000';
+  let theDate = new Date(today1).toISOString()
+
+  Medicine.find({creatorId: req.params.user_id, startDate:{$lte: theDate}, finishDate:{$gte: theDate }})
   .sort({ dosesTime: 'asc' })
     .then(medicine =>res.json( medicine) )
     .catch(error => { console.log(error) }) 
 });
-
 
 
 

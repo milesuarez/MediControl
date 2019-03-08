@@ -68,7 +68,7 @@ class App extends Component {
             
           </header>
           <section>
-            <DailyMedicines userData={this.state.loggedInUser._id} getUser={this.props.getUser} />
+            {/* <DailyMedicines userData={this.state.loggedInUser._id} getUser={this.props.getUser} /> */}
           </section>
         </div>
       );

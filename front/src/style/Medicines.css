@@ -1,0 +1,35 @@
+table {
+    width: 80%;
+    align-self: auto;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+tr {
+    text-align: left;
+    
+}
+td, th {
+    color: white;
+}
+
+th {
+    font-size: 0.8em;
+    text-align: center;
+}
+
+td {
+    border-bottom: solid gray 1px;
+    font-size: 0.7em;
+}
+
+h5{
+    font-size: 1em;
+    color: #075157
+}
+
+.images{
+    margin:10px auto;
+    display:block;
+    width: 20px;
+}

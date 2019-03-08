@@ -44,7 +44,7 @@ class AuthService {
     .then(response => response.data)
   }
 
-  medicinesAdd = (nameMedicine, startDate, finishDate, dosesTime, doses, unit) => {
+  medicinesAdd = (nameMedicine, startDate, finishDate, dosesTime, doses, unit) => {console.log("FF",finishDate,startDate)
     return this.service.post('/addMedicine',{nameMedicine, startDate, finishDate, dosesTime, doses, unit})
     .then(response => response.data)
   }
